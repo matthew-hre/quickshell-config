@@ -5,7 +5,7 @@ import Quickshell.Io
 Text {
     id: powerText
     text: "0%"
-    color: "#fff"
+    color: "#FFF"
     font.pointSize: 10.5
     font.family: "Work Sans"
 
@@ -49,6 +49,14 @@ Text {
         }
 
         powerText.text = displayText;
+
+        if (batteryPercent < 10) {
+            powerText.color = "#FF5555";
+        } else if (batteryPercent < 20) {
+            powerText.color = "#FFB86C";
+        } else {
+            powerText.color = "#FFF";
+        }
     }
 
     Timer {
