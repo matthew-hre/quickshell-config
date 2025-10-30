@@ -2,12 +2,13 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import "../../Commons"
 
 Text {
     id: windowText
-    color: "#fff"
-    font.pointSize: 10.5
-    font.family: "Work Sans"
+    color: Style.textPrimary
+    font.pointSize: Style.baseFontSize
+    font.family: Style.fontFamily
     maximumLineCount: 1
     text: ""
 

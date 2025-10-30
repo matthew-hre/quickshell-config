@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import "../../Commons"
 
 Item {
     id: root
@@ -11,9 +12,9 @@ Item {
     Text {
         id: volumeText
         text: "󰝟 0%"
-        color: "#fff"
-        font.pointSize: 10.5
-        font.family: "Work Sans"
+        color: Style.textPrimary
+        font.pointSize: Style.baseFontSize
+        font.family: Style.fontFamily
     }
 
     // Existing poller

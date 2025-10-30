@@ -3,22 +3,25 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.Pipewire
 import "Components/Indicators"
+import "Commons"
 
 ShellRoot {
     PanelWindow {
         implicitHeight: 30
-        color: "transparent"
+        color: Style.panelBackground
 
         anchors {
             top: true
             left: true
             right: true
+            bottom: false
         }
 
         RowLayout {
             anchors.fill: parent
-            anchors.margins: 10
-            spacing: 16
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
+            spacing: Style.spacingL
 
             Clock {}
 

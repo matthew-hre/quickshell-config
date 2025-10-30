@@ -1,13 +1,14 @@
 import QtQuick
+import "../../Commons"
 
 Text {
     text: {
         const now = new Date();
         return now.toLocaleTimeString(Qt.locale(), "hh:mm:ss A").replace(/\./g, "");
     }
-    color: "#fff"
-    font.pointSize: 10.5
-    font.family: "Work Sans"
+    color: Style.textPrimary
+    font.pointSize: Style.baseFontSize
+    font.family: Style.fontFamily
 
     Timer {
         interval: 1000
