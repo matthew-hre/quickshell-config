@@ -1,11 +1,20 @@
-import QtQuick
 import QtQuick.Layouts
+
+import qs.Components.Indicators
+import qs.Commons
+
+import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.Pipewire
-import "Components/Indicators"
-import "Commons"
+import Quickshell.Widgets
 
 ShellRoot {
+    Component.onCompleted: {
+        Logger.i("Shell", "---------------------------");
+        Logger.i("Shell", "Quickshell Hello!");
+    }
+
     PanelWindow {
         implicitHeight: 30
         color: Style.panelBackground

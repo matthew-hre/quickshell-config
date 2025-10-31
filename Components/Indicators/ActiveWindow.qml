@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import "../../Commons"
+import qs.Commons
 
 Text {
     id: windowText

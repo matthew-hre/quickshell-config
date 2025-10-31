@@ -1,11 +1,10 @@
 import QtQuick
-import "../../Commons"
+import qs.Commons
 
 Text {
-    text: {
-        const now = new Date();
-        return now.toLocaleTimeString(Qt.locale(), "hh:mm:ss A").replace(/\./g, "");
-    }
+    property var date: Time.date
+
+    text: formatTime(date)
     color: Style.textPrimary
     font.pointSize: Style.baseFontSize
     font.family: Style.fontFamily
@@ -15,8 +14,11 @@ Text {
         running: true
         repeat: true
         onTriggered: {
-            const now = new Date();
-            parent.text = now.toLocaleTimeString(Qt.locale(), "hh:mm:ss A").replace(/\./g, "");
+            parent.text = formatTime(date);
         }
+    }
+
+    function formatTime(date) {
+        return date.toLocaleTimeString(Qt.locale(), "hh:mm:ss A").replace(/\./g, "");
     }
 }
