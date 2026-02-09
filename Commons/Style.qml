@@ -32,5 +32,5 @@ Singleton {
     readonly property color errorColor: red
     readonly property color warningColor: orange
     readonly property color successColor: green
-    readonly property color panelBackground: transparent
+    property color panelBackground: background
 }

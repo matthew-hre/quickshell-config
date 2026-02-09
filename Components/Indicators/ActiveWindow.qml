@@ -14,6 +14,7 @@ Text {
 
     property string targetText: ""
     property bool isAnimating: false
+    property bool hasActiveWindow: false
 
     Behavior on opacity {
         NumberAnimation {
@@ -66,6 +67,7 @@ Text {
             onStreamFinished: {
                 const focusedWindow = this.text.match(/\(focused\)[\s\S]*?Title:\s+"([^"]+)"/);
                 const newText = focusedWindow ? focusedWindow[1] : "";
+                windowText.hasActiveWindow = newText.length > 0;
 
                 windowText.updateText(newText);
             }
