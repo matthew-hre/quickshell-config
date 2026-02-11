@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.Notifications
 import qs.Commons
@@ -26,7 +25,7 @@ Item {
         color: "transparent"
 
         implicitWidth: 370
-        implicitHeight: Math.max(notifColumn.implicitHeight + 18, 1)
+        implicitHeight: screen.height
 
         exclusionMode: ExclusionMode.Ignore
         aboveWindows: true
@@ -43,7 +42,7 @@ Item {
             right: 9
         }
 
-        ColumnLayout {
+        Column {
             id: notifColumn
             anchors.left: parent.left
             anchors.right: parent.right
@@ -52,6 +51,10 @@ Item {
             spacing: Style.spacingM
             visible: notifRepeater.count > 0
 
+            move: Transition {
+                NumberAnimation { properties: "y"; duration: 250; easing.type: Easing.InOutCubic }
+            }
+
             Repeater {
                 id: notifRepeater
                 model: server.trackedNotifications
@@ -59,7 +62,7 @@ Item {
                 NotificationPopup {
                     required property var modelData
                     notification: modelData
-                    Layout.fillWidth: true
+                    width: notifColumn.width
                 }
             }
         }
