@@ -1,7 +1,9 @@
+//@ pragma IconTheme ePapirus-Dark
 import QtQuick.Layouts
 
 import qs.Components
 import qs.Components.Indicators
+import qs.Components.Notifications
 import qs.Commons
 
 import QtQuick
@@ -17,4 +19,7 @@ ShellRoot {
     }
 
     Bar {}
+    NotificationStack {}
+    VolumeNotifier {}
+    BrightnessNotifier {}
 }

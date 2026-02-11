@@ -2,7 +2,7 @@
 
 A fairly shoddy recreation of my Waybar setup, built using Quickshell's QML framework.
 
-> This project is TERRIBLE! It's NO GOOD! It's just a quick hack to get something working. I am more than the sum of my parts
+> This project is still under development, and is definitely a little rough around the edges. Use at your own risk.
 
 ## Project Layout
 
@@ -12,13 +12,18 @@ A fairly shoddy recreation of my Waybar setup, built using Quickshell's QML fram
 ├── Commons/
 │   └── Style.qml               # Global styling, colors, fonts, and spacing constants
 └── Components/
-    └── Indicators/             # Individual status indicator components
-        ├── Clock.qml           # System time display (HH:MM:SS A)
-        ├── Volume.qml          # Audio volume level and mute status
-        ├── Network.qml         # WiFi network status and signal strength
-        ├── Bluetooth.qml       # Bluetooth power state and connected device
-        ├── Power.qml           # Battery percentage and charging status
-        └── ActiveWindow.qml    # Current focused window title
+    ├── Indicators/             # Individual status indicator components
+    │   ├── Clock.qml           # System time display (HH:MM:SS A)
+    │   ├── Volume.qml          # Audio volume level and mute status
+    │   ├── Network.qml         # WiFi network status and signal strength
+    │   ├── Bluetooth.qml       # Bluetooth power state and connected device
+    │   ├── Power.qml           # Battery percentage and charging status
+    │   └── ActiveWindow.qml    # Current focused window title
+    └── Notifications/          # Notification daemon components
+        ├── NotificationPopup.qml   # Individual notification card
+        ├── NotificationStack.qml   # Server + stacked popup window
+        ├── VolumeNotifier.qml      # Volume change monitor + OSD notification
+        └── BrightnessNotifier.qml  # Brightness change monitor + OSD notification
 ```
 
 ## Component Descriptions
@@ -75,6 +80,38 @@ A singleton providing design tokens:
 - Shows the title of the currently focused window
 - Uses Niri window manager protocol (`niri msg windows`)
 - Updates every 500ms
+
+### `Components/Notifications/`
+
+#### NotificationStack.qml
+
+- Hosts a `NotificationServer` implementing the Desktop Notifications Specification
+- Tracks incoming notifications and displays them in a `PanelWindow` anchored top-right
+- Window uses `ExclusionMode.Ignore` so it overlays without reserving screen space
+- Offset 40px from top (below the bar) and 9px from the right edge
+
+#### NotificationPopup.qml
+
+- Individual notification card with 350px width and 11px corner radius (matching former Dunst config)
+- Displays summary, body (up to 3 lines), app icon, and action buttons
+- Critical urgency notifications use red background; others use Dracula background
+- Progress bar rendered when the notification carries a `value` hint
+- Auto-expires after the notification's `expireTimeout` (defaults to 5s normal, 10s critical)
+- Dismiss button to manually close notifications
+
+#### VolumeNotifier.qml
+
+- Polls `wpctl get-volume @DEFAULT_AUDIO_SINK@` every 200ms
+- Sends a notification with progress bar when volume or mute state changes
+- Uses `notify-send -r` to replace the notification in-place (no stacking)
+- Skips the initial reading to avoid a notification on shell start
+
+#### BrightnessNotifier.qml
+
+- Polls `brightnessctl -m info` every 200ms
+- Sends a notification with progress bar when brightness changes
+- Uses `notify-send -r` to replace the notification in-place (no stacking)
+- Skips the initial reading to avoid a notification on shell start
 
 ## Future Improvements
 
