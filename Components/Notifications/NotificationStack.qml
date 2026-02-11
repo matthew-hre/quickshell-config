@@ -22,13 +22,14 @@ Item {
 
     PanelWindow {
         id: notifWindow
-        color: "transparent"
+        color: Style.panelBackground
 
-        implicitWidth: 370
+        implicitWidth: Style.notificationStackWidth
         implicitHeight: screen.height
 
         exclusionMode: ExclusionMode.Ignore
         aboveWindows: true
+        mask: Region { item: notifColumn }
 
         anchors {
             top: true
@@ -38,8 +39,8 @@ Item {
         }
 
         margins {
-            top: 40
-            right: 9
+            top: Style.notificationPanelMarginTop
+            right: Style.notificationPanelMarginRight
         }
 
         Column {
@@ -47,12 +48,12 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.margins: 9
+            anchors.margins: Style.notificationPanelInnerMargin
             spacing: Style.spacingM
             visible: notifRepeater.count > 0
 
             move: Transition {
-                NumberAnimation { properties: "y"; duration: 250; easing.type: Easing.InOutCubic }
+                NumberAnimation { properties: "y"; duration: Style.animMediumMs; easing.type: Easing.InOutCubic }
             }
 
             Repeater {

@@ -10,12 +10,17 @@ Item {
     property int notifId: -1
     property bool initialized: false
 
-    readonly property string brightnessIconPath:
-        "/home/matthew_hre/.local/share/icons/ePapirus/24x24/panel/brightness-high-symbolic.svg"
+    property int pollIntervalMs: 200
+    property int notifyTimeoutMs: 3000
+    property string notifyAppName: "System"
+    property string brightnessIcon: "brightness-high-symbolic"
+    property var brightnessCommand: ["brightnessctl", "-m", "info"]
+
+    readonly property string brightnessIconPath: Quickshell.iconPath(brightnessIcon, true)
 
     function sendNotification(pct: int) {
         const summary = `Brightness ${pct}%`;
-        let cmd = ["notify-send", "-a", "System", "-t", "3000", "-p", "-e",
+        let cmd = ["notify-send", "-a", root.notifyAppName, "-t", root.notifyTimeoutMs.toString(), "-p", "-e",
                    "-h", `int:value:${pct}`, "-i", brightnessIconPath, summary];
         if (notifId >= 0)
             cmd.splice(7, 0, "-r", notifId.toString());
@@ -25,7 +30,7 @@ Item {
 
     Process {
         id: brightnessProcess
-        command: ["brightnessctl", "-m", "info"]
+        command: root.brightnessCommand
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
@@ -52,7 +57,7 @@ Item {
     }
 
     Timer {
-        interval: 200
+        interval: root.pollIntervalMs
         running: true
         repeat: true
         onTriggered: brightnessProcess.running = true

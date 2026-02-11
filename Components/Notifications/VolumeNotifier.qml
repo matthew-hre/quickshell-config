@@ -10,10 +10,20 @@ Item {
     property bool lastMuted: false
     property bool initialized: false
     property int notifId: -1
+    property int pollIntervalMs: 200
+    property int notifyTimeoutMs: 3000
+    property string notifyAppName: "System"
+    property string sinkId: "@DEFAULT_AUDIO_SINK@"
+    property int lowThreshold: 33
+    property int mediumThreshold: 66
+    property string iconMuted: "audio-volume-muted"
+    property string iconLow: "audio-volume-low"
+    property string iconMedium: "audio-volume-medium"
+    property string iconHigh: "audio-volume-high"
 
     Process {
         id: volumeProcess
-        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
+        command: ["wpctl", "get-volume", root.sinkId]
         running: true
         stdout: StdioCollector {
             onStreamFinished: {
@@ -39,19 +49,19 @@ Item {
 
                 let fdIcon;
                 if (isMuted) {
-                    fdIcon = "audio-volume-muted";
-                } else if (pct <= 33) {
-                    fdIcon = "audio-volume-low";
-                } else if (pct <= 66) {
-                    fdIcon = "audio-volume-medium";
+                    fdIcon = root.iconMuted;
+                } else if (pct <= root.lowThreshold) {
+                    fdIcon = root.iconLow;
+                } else if (pct <= root.mediumThreshold) {
+                    fdIcon = root.iconMedium;
                 } else {
-                    fdIcon = "audio-volume-high";
+                    fdIcon = root.iconHigh;
                 }
 
                 const summary = isMuted ? "Volume Muted" : `Volume ${pct}%`;
                 const value = isMuted ? 0 : pct;
 
-                let cmd = ["notify-send", "-a", "System", "-t", "3000", "-e", "-p",
+                let cmd = ["notify-send", "-a", root.notifyAppName, "-t", root.notifyTimeoutMs.toString(), "-e", "-p",
                            "-h", `int:value:${value}`, "-i", fdIcon];
                 if (root.notifId >= 0)
                     cmd.push("-r", root.notifId.toString());
@@ -78,7 +88,7 @@ Item {
     }
 
     Timer {
-        interval: 200
+        interval: root.pollIntervalMs
         running: true
         repeat: true
         onTriggered: volumeProcess.running = true

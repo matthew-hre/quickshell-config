@@ -33,4 +33,38 @@ Singleton {
     readonly property color warningColor: orange
     readonly property color successColor: green
     readonly property color panelBackground: transparent
+
+    // Radii
+    readonly property real radiusXS: 2
+    readonly property real radiusS: 4
+    readonly property real radiusM: 10
+
+    // Border
+    readonly property real borderWidth: 1
+
+    // Typography
+    readonly property real fontSizeTitle: baseFontSize
+    readonly property real fontSizeBody: baseFontSize - 0.5
+    readonly property real fontSizeCaption: baseFontSize - 1
+
+    // Animation durations (ms)
+    readonly property int animFastMs: 200
+    readonly property int animMediumMs: 250
+    readonly property int animSlowMs: 300
+
+    // Notification layout
+    readonly property real notificationStackWidth: 370
+    readonly property real notificationPopupWidth: 350
+    readonly property real notificationPanelMarginTop: 40
+    readonly property real notificationPanelMarginRight: 8
+    readonly property real notificationPanelInnerMargin: 8
+    readonly property real notificationPopupPadding: 12
+    readonly property real notificationIconSize: 24
+
+    // Progress bar
+    readonly property real progressHeight: 4
+    readonly property real progressRadius: radiusXS
+
+    // Controls
+    readonly property real controlPaddingS: 8
 }
