@@ -27,27 +27,38 @@ Item {
             anchors.rightMargin: 12
             spacing: Style.spacingL
 
-            Clock {}
-
-            Item {
-                Layout.fillWidth: true
+            Clock {
+                visible: Settings.showClock
             }
 
             Item {
                 Layout.fillWidth: true
             }
 
-            Volume {}
+            Item {
+                Layout.fillWidth: true
+            }
 
-            Network {}
+            Volume {
+                visible: Settings.showVolume
+            }
 
-            Bluetooth {}
+            Network {
+                visible: Settings.showNetwork
+            }
 
-            Power {}
+            Bluetooth {
+                visible: Settings.showBluetooth
+            }
+
+            Power {
+                visible: Settings.showBattery
+            }
         }
 
         ActiveWindow {
             anchors.centerIn: parent
+            visible: Settings.showActiveWindow
         }
     }
 }

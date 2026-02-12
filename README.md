@@ -28,6 +28,20 @@ A fairly shoddy recreation of my Waybar setup, built using Quickshell's QML fram
 
 ## Component Descriptions
 
+## Configuration
+
+The Home Manager module exposes `programs.quickshellConfig.settings` which renders
+`Commons/Settings.json` for runtime toggles. Each option defaults to `true`.
+
+Example:
+
+```nix
+programs.quickshellConfig.settings = {
+  showBattery = false;
+  showBluetooth = false;
+};
+```
+
 ### `shell.qml`
 
 The main entry point that creates a 30px panel window positioned at the top of the screen. It uses a horizontal layout to display all indicators with the active window title centered in the middle.

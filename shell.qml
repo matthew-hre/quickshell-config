@@ -19,7 +19,13 @@ ShellRoot {
     }
 
     Bar {}
-    NotificationStack {}
-    VolumeNotifier {}
-    BrightnessNotifier {}
+    NotificationStack {
+        visible: Settings.showNotificationStack
+    }
+    VolumeNotifier {
+        visible: Settings.showVolumeNotifier
+    }
+    BrightnessNotifier {
+        visible: Settings.showBrightnessNotifier
+    }
 }
