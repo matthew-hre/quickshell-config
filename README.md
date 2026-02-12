@@ -18,6 +18,7 @@ A fairly shoddy recreation of my Waybar setup, built using Quickshell's QML fram
     │   ├── Network.qml         # WiFi network status and signal strength
     │   ├── Bluetooth.qml       # Bluetooth power state and connected device
     │   ├── Power.qml           # Battery percentage and charging status
+    │   ├── RecordingStatus.qml # Screen recording indicator
     │   └── ActiveWindow.qml    # Current focused window title
     └── Notifications/          # Notification daemon components
         ├── NotificationPopup.qml   # Individual notification card
@@ -61,6 +62,11 @@ A singleton providing design tokens:
 
 - Displays current time in 12-hour format with seconds
 - Updates every 1 second via JavaScript timer
+
+#### RecordingStatus.qml
+
+- Displays an icon if [`niri-screen-recorder`](https://github.com/matthew-hre/niri-screen-recorder) is recording
+- Stops the active recording on click
 
 #### Volume.qml
 

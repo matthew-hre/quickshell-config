@@ -11,6 +11,7 @@ Singleton {
         : Quickshell.env("HOME") + "/.config"
 
     readonly property bool showClock: config.showClock ?? true
+    readonly property bool showRecordingStatus: config.showRecordingStatus ?? true
     readonly property bool showVolume: config.showVolume ?? true
     readonly property bool showNetwork: config.showNetwork ?? true
     readonly property bool showBluetooth: config.showBluetooth ?? true

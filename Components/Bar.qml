@@ -39,6 +39,10 @@ Item {
                 Layout.fillWidth: true
             }
 
+            RecordingStatus {
+                visible: Settings.showRecordingStatus
+            }
+
             Volume {
                 visible: Settings.showVolume
             }
