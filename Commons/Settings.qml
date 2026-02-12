@@ -37,7 +37,7 @@ Singleton {
 
     FileView {
         id: settingsFile
-        path: resolvedConfigHome + "/quickshell/Commons/Settings.json"
+        path: resolvedConfigHome + "/quickshell-settings.json"
         blockLoading: true
         watchChanges: true
         onFileChanged: {

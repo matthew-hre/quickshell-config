@@ -135,7 +135,7 @@
         ];
 
         xdg.configFile."quickshell".source = configSource;
-        xdg.configFile."quickshell/Commons/Settings.json".source = lib.mkForce settingsJson;
+        home.file.".config/quickshell-settings.json".source = lib.mkForce settingsJson;
 
         home.sessionVariables = {
           QML_IMPORT_PATH = "${pkgs.qt6.qt5compat}/lib/qt-6/qml:${pkgs.qt6.qtdeclarative}/lib/qt-6/qml";

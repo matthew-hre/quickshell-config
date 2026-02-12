@@ -31,7 +31,7 @@ A fairly shoddy recreation of my Waybar setup, built using Quickshell's QML fram
 ## Configuration
 
 The Home Manager module exposes `programs.quickshellConfig.settings` which renders
-`Commons/Settings.json` for runtime toggles. Each option defaults to `true`.
+`~/.config/quickshell-settings.json` for runtime toggles. Each option defaults to `true`.
 
 Example:
 
