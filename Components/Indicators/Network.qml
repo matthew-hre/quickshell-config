@@ -19,6 +19,7 @@ Text {
             onStreamFinished: {
                 let disconnectedIcon = "󰤮  ";
                 let signalStrengths = ["󰤟  ", "󰤢  ", "󰤥  ", "󰤨  "];
+                let ethernetIcon = "󰈀  ";
 
                 let output = this.text.trim();
 
@@ -59,11 +60,51 @@ Text {
                     }
                 }
 
+                // Check for wired ethernet if WiFi not found
                 if (!found) {
-                    displayText = disconnectedIcon;
+                    ethernetProcess.running = true;
+                } else {
+                    networkText.text = displayText;
+                }
+            }
+        }
+    }
+
+    Process {
+        id: ethernetProcess
+        command: ["nmcli", "-t", "-f", "DEVICE,TYPE,STATE,CONNECTION", "device"]
+        running: false
+
+        stdout: StdioCollector {
+            onStreamFinished: {
+                let output = this.text.trim();
+                let lines = output.split("\n");
+                let found = false;
+
+                for (let i = 0; i < lines.length; i++) {
+                    let line = lines[i].trim();
+                    if (!line)
+                        continue;
+
+                    // DEVICE:TYPE:STATE:CONNECTION
+                    let parts = line.split(":");
+                    if (parts.length < 3)
+                        continue;
+
+                    let device = parts[0];
+                    let type = parts[1];
+                    let state = parts[2];
+
+                    if (type === "ethernet" && (state === "connected" || state.indexOf("connected") >= 0)) {
+                        networkText.text = "󰈀  " + device;
+                        found = true;
+                        break;
+                    }
                 }
 
-                networkText.text = displayText;
+                if (!found) {
+                    networkText.text = "󰤮  ";
+                }
             }
         }
     }
