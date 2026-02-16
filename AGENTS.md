@@ -13,7 +13,6 @@ The following packages are installed, and are able to be used in this project:
 - kdePackages.qtsvg
 - kdePackages.qtstyleplugin-kvantum
 - wallust
-- material-symbols
-- material-icons
+- papirus-icon-theme
 - cava
 - gpu-screen-recorder

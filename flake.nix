@@ -128,8 +128,7 @@
           pkgs.kdePackages.qtsvg
           pkgs.kdePackages.qtstyleplugin-kvantum
           pkgs.wallust
-          pkgs.material-symbols
-          pkgs.material-icons
+          pkgs.papirus-icon-theme
           pkgs.cava
           pkgs.slurp
         ];
