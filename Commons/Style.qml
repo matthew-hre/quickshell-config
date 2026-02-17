@@ -14,7 +14,7 @@ Singleton {
     readonly property real spacingL: 16
     readonly property real spacingXL: 24
 
-    readonly property color background: "#282a36"
+    readonly property color background: "#f82a36"
     readonly property color currentLine: "#44475a"
     readonly property color foreground: "#f8f8f2"
     readonly property color comment: "#6272a4"
@@ -26,6 +26,7 @@ Singleton {
     readonly property color cyan: "#8be9fd"
     readonly property color pink: "#ff79c6"
     readonly property color transparent: "transparent"
+    readonly property color notificationBackground: "#282a36"
 
     readonly property color textPrimary: foreground
     readonly property color textSecondary: comment
@@ -60,6 +61,8 @@ Singleton {
     readonly property real notificationPanelInnerMargin: 8
     readonly property real notificationPopupPadding: 12
     readonly property real notificationIconSize: 24
+    readonly property real notificationImageSize: 48
+    readonly property real notificationHeroHeight: 140
 
     // Progress bar
     readonly property real progressHeight: 4

@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import Quickshell.Widgets
+import Quickshell.Services.Notifications
 import qs.Commons
 
 Rectangle {
@@ -16,7 +16,7 @@ Rectangle {
     property string fallbackSummary: "Notification"
 
     readonly property bool isCritical:
-        notification.urgency === 2 // NotificationUrgency.Critical
+        notification.urgency === NotificationUrgency.Critical
 
     readonly property int progressValue: {
         let hints = notification.hints;
@@ -44,10 +44,46 @@ Rectangle {
         return result;
     }
 
+    function normalizeImageSource(source, allowIcon) {
+        if (!source)
+            return "";
+        if (source.startsWith("file://") || source.startsWith("data:") || source.startsWith("image://"))
+            return source;
+        if (source.startsWith("/"))
+            return "file://" + source;
+        if (allowIcon)
+            return Quickshell.iconPath(source, true);
+        return source;
+    }
+
+    readonly property string leftImageSource: {
+        let image = notification.image || "";
+        if (image)
+            return root.normalizeImageSource(image, false);
+        let icon = notification.appIcon || "";
+        if (icon)
+            return root.normalizeImageSource(icon, true);
+        return "";
+    }
+
+    readonly property string appIdentity: {
+        let entry = notification.desktopEntry || "";
+        if (entry)
+            return entry.toLowerCase();
+        let name = notification.appName || "";
+        if (name)
+            return name.toLowerCase();
+        return "";
+    }
+
+    readonly property bool isDiscord: appIdentity.includes("discord")
+    readonly property bool isTidal: appIdentity.includes("tidal")
+    readonly property real imageRadius: isDiscord ? 0 : Style.radiusS
+
     implicitWidth: Style.notificationPopupWidth
     implicitHeight: contentColumn.implicitHeight + Style.notificationPopupPadding * 2
     radius: Style.radiusM
-    color: isCritical ? Style.red : Style.background
+    color: Style.notificationBackground
     border.color: isCritical ? Style.red : Style.currentLine
     border.width: Style.borderWidth
     clip: true
@@ -78,111 +114,141 @@ Rectangle {
         id: contentColumn
         anchors.fill: parent
         anchors.margins: Style.notificationPopupPadding
-        spacing: Style.spacingS
+        spacing: Style.spacingM
+
+        Rectangle {
+            visible: root.isTidal && root.leftImageSource !== ""
+            color: Style.transparent
+            radius: Style.radiusS
+            Layout.fillWidth: true
+            Layout.preferredHeight: width
+            clip: true
+
+            Image {
+                anchors.fill: parent
+                source: root.leftImageSource
+                fillMode: Image.PreserveAspectCrop
+                smooth: true
+                visible: root.leftImageSource !== ""
+            }
+        }
 
         RowLayout {
+            id: contentRow
             Layout.fillWidth: true
             spacing: Style.spacingM
 
-            IconImage {
-                id: appIconImage
-                source: {
-                    let icon = notification.appIcon || "";
-                    if (!icon) return "";
-                    if (icon.startsWith("file://"))
-                        return icon;
-                    if (icon.startsWith("/"))
-                        return "file://" + icon;
-                    return Quickshell.iconPath(icon, true);
-                }
-                visible: source != ""
-                implicitSize: Style.notificationIconSize
-                Layout.preferredWidth: Style.notificationIconSize
-                Layout.preferredHeight: Style.notificationIconSize
-            }
-
-            Text {
-                text: notification.summary || notification.appName || root.fallbackSummary
-                color: isCritical ? Style.foreground : Style.textPrimary
-                font.pointSize: Style.fontSizeTitle
-                font.family: Style.fontFamily
-                font.weight: Font.Medium
-                elide: Text.ElideRight
-                Layout.fillWidth: true
-            }
-
-            Text {
-                text: root.closeGlyph
-                color: Style.textSecondary
-                font.pointSize: Style.baseFontSize
-                font.family: Style.fontFamily
-
-                MouseArea {
-                    anchors.fill: parent
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: exitAnimation.start()
-                }
-            }
-        }
-
-        Text {
-            text: notification.body || ""
-            visible: text !== ""
-            color: isCritical ? Style.foreground : Style.foreground
-            font.pointSize: Style.fontSizeBody
-            font.family: Style.fontFamily
-            wrapMode: Text.WordWrap
-            Layout.fillWidth: true
-            maximumLineCount: root.bodyMaxLines
-            elide: Text.ElideRight
-        }
-
-        Rectangle {
-            visible: root.progressValue >= 0
-            Layout.fillWidth: true
-            height: Style.progressHeight
-            radius: Style.progressRadius
-            color: Style.currentLine
-
             Rectangle {
-                width: parent.width * (root.progressValue / 100)
-                height: parent.height
-                radius: parent.radius
-                color: isCritical ? Style.foreground : Style.purple
+                visible: !root.isTidal && root.leftImageSource !== ""
+                color: Style.transparent
+                radius: root.imageRadius
+                Layout.preferredWidth: Style.notificationImageSize
+                Layout.preferredHeight: Style.notificationImageSize
+                Layout.alignment: Qt.AlignTop
+                clip: true
+
+                Image {
+                    anchors.fill: parent
+                    source: root.leftImageSource
+                    fillMode: Image.PreserveAspectCrop
+                    smooth: true
+                    visible: root.leftImageSource !== ""
+                }
             }
-        }
 
-        RowLayout {
-            visible: root.visibleActions.length > 0
-            Layout.fillWidth: true
-            spacing: Style.spacingS
+            ColumnLayout {
+                id: detailsColumn
+                Layout.fillWidth: true
+                spacing: Style.spacingS
 
-            Repeater {
-                model: root.visibleActions
-
-                Rectangle {
-                    required property var modelData
-
+                RowLayout {
                     Layout.fillWidth: true
-                    implicitHeight: actionLabel.implicitHeight + Style.controlPaddingS
-                    radius: Style.radiusS
-                    color: Style.currentLine
+                    spacing: Style.spacingM
 
                     Text {
-                        id: actionLabel
-                        anchors.centerIn: parent
-                        text: modelData.text
+                        text: notification.summary || notification.appName || root.fallbackSummary
                         color: Style.textPrimary
-                        font.pointSize: Style.fontSizeCaption
+                        font.pointSize: Style.fontSizeTitle
                         font.family: Style.fontFamily
+                        font.weight: Font.Medium
+                        elide: Text.ElideRight
+                        Layout.fillWidth: true
                     }
 
-                    MouseArea {
-                        anchors.fill: parent
-                        cursorShape: Qt.PointingHandCursor
-                        onClicked: {
-                            Logger.i("Notifications", `Action invoked: ${modelData.text}`);
-                            modelData.invoke();
+                    Text {
+                        text: root.closeGlyph
+                        color: Style.textSecondary
+                        font.pointSize: Style.baseFontSize
+                        font.family: Style.fontFamily
+
+                        MouseArea {
+                            anchors.fill: parent
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: exitAnimation.start()
+                        }
+                    }
+                }
+
+                Text {
+                    text: notification.body || ""
+                    visible: text !== ""
+                    color: Style.foreground
+                    font.pointSize: Style.fontSizeBody
+                    font.family: Style.fontFamily
+                    wrapMode: Text.WordWrap
+                    Layout.fillWidth: true
+                    maximumLineCount: root.bodyMaxLines
+                    elide: Text.ElideRight
+                }
+
+                Rectangle {
+                    visible: root.progressValue >= 0
+                    Layout.fillWidth: true
+                    height: Style.progressHeight
+                    radius: Style.progressRadius
+                    color: Style.currentLine
+
+                    Rectangle {
+                        width: parent.width * (root.progressValue / 100)
+                        height: parent.height
+                        radius: parent.radius
+                        color: Style.purple
+                    }
+                }
+
+                RowLayout {
+                    visible: root.visibleActions.length > 0
+                    Layout.fillWidth: true
+                    spacing: Style.spacingS
+
+                    Repeater {
+                        model: root.visibleActions
+
+                        Rectangle {
+                            required property var modelData
+
+                            Layout.fillWidth: true
+                            implicitHeight: actionLabel.implicitHeight + Style.controlPaddingS
+                            radius: Style.radiusS
+                            color: Style.currentLine
+
+                            Text {
+                                id: actionLabel
+                                anchors.centerIn: parent
+                                text: modelData.text
+                                color: Style.textPrimary
+                                font.pointSize: Style.fontSizeCaption
+                                font.family: Style.fontFamily
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                cursorShape: Qt.PointingHandCursor
+                                onClicked: {
+                                    Logger.i("Notifications", `Action invoked: ${modelData.text}`);
+                                    modelData.invoke();
+                                }
+                            }
                         }
                     }
                 }
