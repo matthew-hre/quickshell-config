@@ -89,7 +89,8 @@ Rectangle {
     clip: true
 
     opacity: 0
-    transform: Translate { id: slideTransform; x: root.implicitWidth + Style.spacingXL }
+    readonly property real slideOffscreen: root.implicitWidth + Style.notificationPanelMarginRight + Style.notificationPanelInnerMargin + Style.spacingXL
+    transform: Translate { id: slideTransform; x: root.slideOffscreen }
 
     Component.onCompleted: enterAnimation.start()
 
@@ -282,7 +283,7 @@ Rectangle {
     ParallelAnimation {
         id: exitAnimation
         NumberAnimation { target: root; property: "opacity"; to: 0; duration: Style.animFastMs; easing.type: Easing.InCubic }
-        NumberAnimation { target: slideTransform; property: "x"; to: root.implicitWidth + Style.spacingXL; duration: Style.animMediumMs; easing.type: Easing.InCubic }
+        NumberAnimation { target: slideTransform; property: "x"; to: root.slideOffscreen; duration: Style.animMediumMs; easing.type: Easing.InCubic }
         onFinished: notification.expire()
     }
 }
