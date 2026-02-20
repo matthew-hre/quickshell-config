@@ -48,7 +48,11 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.margins: Style.notificationPanelInnerMargin
+            anchors.topMargin: Settings.bluetoothPanelOpen
+                ? Settings.bluetoothPanelHeight + Style.spacingM - Style.notificationPanelMarginTop + Style.notificationPanelInnerMargin
+                : Style.notificationPanelInnerMargin
+            anchors.leftMargin: Style.notificationPanelInnerMargin
+            anchors.rightMargin: Style.notificationPanelInnerMargin
             spacing: Style.spacingM
             visible: notifRepeater.count > 0
 

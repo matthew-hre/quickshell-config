@@ -68,6 +68,10 @@ Singleton {
     readonly property real progressHeight: 4
     readonly property real progressRadius: radiusXS
 
+    // Bar
+    readonly property real barHeight: 30
+    readonly property real barPanelOffset: barHeight + spacingM
+
     // Controls
     readonly property real controlPaddingS: 8
 }

@@ -11,7 +11,7 @@ Item {
     clip: true
 
     PanelWindow {
-        implicitHeight: 30
+        implicitHeight: Style.barHeight
         color: Style.panelBackground
 
         anchors {
@@ -64,5 +64,10 @@ Item {
             anchors.centerIn: parent
             visible: Settings.showActiveWindow
         }
+    }
+
+    BluetoothPanel {
+        open: Settings.bluetoothPanelOpen
+        onClose: Settings.bluetoothPanelOpen = false
     }
 }

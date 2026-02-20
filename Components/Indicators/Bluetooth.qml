@@ -1,69 +1,50 @@
 import QtQuick
+import QtQuick.Layouts
 import Quickshell
-import Quickshell.Io
+import Quickshell.Bluetooth
 import qs.Commons
 
-Text {
-    id: bluetoothText
-    text: "󰂲"
-    color: Style.textPrimary
-    font.pointSize: Style.baseFontSize
-    font.family: Style.fontFamily
+Item {
+    id: root
+    implicitWidth: indicatorRow.implicitWidth
+    implicitHeight: indicatorRow.implicitHeight
 
-    Process {
-        id: bluetoothProcess
-        command: ["bluetoothctl", "show"]
-        running: true
+    readonly property bool adapterEnabled: Bluetooth.defaultAdapter?.enabled ?? false
 
-        stdout: StdioCollector {
-            onStreamFinished: {
-                updateDisplay();
+    RowLayout {
+        id: indicatorRow
+        spacing: Style.spacingXS
+
+        Text {
+            text: root.adapterEnabled ? "󰂯" : "󰂲"
+            color: Style.textPrimary
+            font.pointSize: Style.baseFontSize
+            font.family: Style.fontFamily
+        }
+
+        Repeater {
+            model: ScriptModel {
+                values: root.adapterEnabled
+                    ? Bluetooth.devices.values.filter(d => d.connected)
+                    : []
+            }
+
+            delegate: Text {
+                required property var modelData
+                text: modelData.name
+                color: Style.textPrimary
+                font.pointSize: Style.baseFontSize
+                font.family: Style.fontFamily
             }
         }
     }
 
-    Process {
-        id: connectedDeviceProcess
-        command: ["bluetoothctl", "info"]
-        running: true
-
-        stdout: StdioCollector {
-            onStreamFinished: {
-                updateDisplay();
-            }
-        }
-    }
-
-    function updateDisplay() {
-        let bluetoothOnIcon = "󰂯";
-        let bluetoothOffIcon = "󰂲";
-
-        let showOutput = bluetoothProcess.stdout.text.trim();
-        let isOn = showOutput.includes("Powered: yes");
-
-        let icon = isOn ? bluetoothOnIcon : bluetoothOffIcon;
-        let displayText = icon;
-
-        if (isOn) {
-            let deviceOutput = connectedDeviceProcess.stdout.text.trim();
-            let nameMatch = deviceOutput.match(/Name:\s+(.+)/);
-
-            if (nameMatch) {
-                let deviceName = nameMatch[1].trim();
-                displayText = icon + " " + deviceName;
-            }
-        }
-
-        bluetoothText.text = displayText;
-    }
-
-    Timer {
-        interval: 1000
-        running: true
-        repeat: true
-        onTriggered: {
-            bluetoothProcess.running = true;
-            connectedDeviceProcess.running = true;
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            Settings.bluetoothPanelOpen = !Settings.bluetoothPanelOpen;
+            Logger.i("Bluetooth", `Panel ${Settings.bluetoothPanelOpen ? "opened" : "closed"}`);
         }
     }
 }

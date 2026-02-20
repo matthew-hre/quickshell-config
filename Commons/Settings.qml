@@ -22,6 +22,10 @@ Singleton {
     readonly property bool showVolumeNotifier: config.showVolumeNotifier ?? true
     readonly property bool showBrightnessNotifier: config.showBrightnessNotifier ?? true
 
+    // Shared state for panel ↔ notification coordination
+    property bool bluetoothPanelOpen: false
+    property real bluetoothPanelHeight: 0
+
     function loadSettings() {
         const rawText = settingsFile.text();
         if (!rawText || rawText.trim().length === 0)
