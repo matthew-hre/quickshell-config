@@ -70,4 +70,9 @@ Item {
         open: Settings.bluetoothPanelOpen
         onClose: Settings.bluetoothPanelOpen = false
     }
+
+    BatteryPanel {
+        open: Settings.batteryPanelOpen
+        onClose: Settings.batteryPanelOpen = false
+    }
 }

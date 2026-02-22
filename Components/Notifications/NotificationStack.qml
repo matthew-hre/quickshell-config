@@ -48,9 +48,14 @@ Item {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.topMargin: Settings.bluetoothPanelOpen
-                ? Settings.bluetoothPanelHeight + Style.spacingM - Style.notificationPanelMarginTop + Style.notificationPanelInnerMargin
-                : Style.notificationPanelInnerMargin
+            anchors.topMargin: {
+                let offset = Style.notificationPanelInnerMargin;
+                let panelHeight = 0;
+                if (Settings.bluetoothPanelOpen) panelHeight = Math.max(panelHeight, Settings.bluetoothPanelHeight);
+                if (Settings.batteryPanelOpen) panelHeight = Math.max(panelHeight, Settings.batteryPanelHeight);
+                if (panelHeight > 0) offset = panelHeight + Style.spacingM - Style.notificationPanelMarginTop + Style.notificationPanelInnerMargin;
+                return offset;
+            }
             anchors.leftMargin: Style.notificationPanelInnerMargin
             anchors.rightMargin: Style.notificationPanelInnerMargin
             spacing: Style.spacingM

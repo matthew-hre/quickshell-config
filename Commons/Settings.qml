@@ -25,6 +25,8 @@ Singleton {
     // Shared state for panel ↔ notification coordination
     property bool bluetoothPanelOpen: false
     property real bluetoothPanelHeight: 0
+    property bool batteryPanelOpen: false
+    property real batteryPanelHeight: 0
 
     function loadSettings() {
         const rawText = settingsFile.text();
