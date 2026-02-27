@@ -50,11 +50,8 @@ Item {
             anchors.top: parent.top
             anchors.topMargin: {
                 let offset = Style.notificationPanelInnerMargin;
-                let panelHeight = 0;
-                if (Settings.bluetoothPanelOpen) panelHeight = Math.max(panelHeight, Settings.bluetoothPanelHeight);
-                if (Settings.batteryPanelOpen) panelHeight = Math.max(panelHeight, Settings.batteryPanelHeight);
-                if (Settings.audioPanelOpen) panelHeight = Math.max(panelHeight, Settings.audioPanelHeight);
-                if (panelHeight > 0) offset = panelHeight + Style.spacingM - Style.notificationPanelMarginTop + Style.notificationPanelInnerMargin;
+                if (Settings.activePanelHeight > 0)
+                    offset = Settings.activePanelHeight + Style.spacingM - Style.notificationPanelMarginTop + Style.notificationPanelInnerMargin;
                 return offset;
             }
             anchors.leftMargin: Style.notificationPanelInnerMargin

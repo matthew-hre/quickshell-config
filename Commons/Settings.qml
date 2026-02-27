@@ -24,11 +24,23 @@ Singleton {
 
     // Shared state for panel ↔ notification coordination
     property bool bluetoothPanelOpen: false
-    property real bluetoothPanelHeight: 0
     property bool batteryPanelOpen: false
-    property real batteryPanelHeight: 0
     property bool audioPanelOpen: false
-    property real audioPanelHeight: 0
+
+    property var _panelHeights: ({})
+    property real activePanelHeight: 0
+
+    function updatePanelHeight(panelId, height) {
+        let h = {};
+        for (let k in _panelHeights) h[k] = _panelHeights[k];
+        if (height > 0) h[panelId] = height;
+        else delete h[panelId];
+        _panelHeights = h;
+
+        let max = 0;
+        for (let k in h) max = Math.max(max, h[k]);
+        activePanelHeight = max;
+    }
 
     function loadSettings() {
         const rawText = settingsFile.text();
