@@ -30,9 +30,9 @@ Item {
     }
 
     readonly property string batteryIcon: {
-        if (!battery.ready) return "󰂑";
-        if (isFull) return "󰁹";
-        if (isCharging) return "󱐋";
+        if (!battery.ready) return "󰂑 ";
+        if (isFull) return "󰁹 ";
+        if (isCharging) return "󱐋 ";
         let idx = Math.min(Math.floor(batteryPercent / 10), batteryIcons.length - 1);
         return batteryIcons[idx];
     }
