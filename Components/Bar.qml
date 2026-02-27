@@ -75,4 +75,9 @@ Item {
         open: Settings.batteryPanelOpen
         onClose: Settings.batteryPanelOpen = false
     }
+
+    AudioPanel {
+        open: Settings.audioPanelOpen
+        onClose: Settings.audioPanelOpen = false
+    }
 }

@@ -1,47 +1,44 @@
 import QtQuick
 import Quickshell
-import Quickshell.Io
+import Quickshell.Services.Pipewire
 import qs.Commons
 
 Item {
     id: root
-    // size to content
     implicitWidth: volumeText.implicitWidth
     implicitHeight: volumeText.implicitHeight
 
+    PwObjectTracker {
+        objects: [Pipewire.defaultAudioSink]
+    }
+
+    readonly property real volume: Pipewire.defaultAudioSink?.audio?.volume ?? 0
+    readonly property bool muted: Pipewire.defaultAudioSink?.audio?.muted ?? false
+    readonly property int pct: Math.round(volume * 100)
+
+    readonly property string volumeMutedIcon: "󰝟"
+    readonly property var volumeLevels: ["󰕿", "󰖀", "󰕾"]
+
+    readonly property string icon: {
+        if (muted || pct === 0) return volumeMutedIcon;
+        if (pct < 50) return volumeLevels[1];
+        return volumeLevels[2];
+    }
+
     Text {
         id: volumeText
-        text: "󰝟 0%"
+        text: `${root.icon} ${root.pct}%`
         color: Style.textPrimary
         font.pointSize: Style.baseFontSize
         font.family: Style.fontFamily
     }
 
-    // Existing poller
-    Process {
-        id: volumeProcess
-        command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
-        running: true
-        stdout: StdioCollector {
-            onStreamFinished: {
-                const volumeMutedIcon = "󰝟";
-                const volumeLevels = ["󰕿", "󰖀", "󰕾"];
-                const out = this.text.trim();
-                const isMuted = out.includes("[MUTED]");
-                const m = out.match(/Volume:\s+([\d.]+)/);
-                if (!m)
-                    return;
-                const pct = Math.round(parseFloat(m[1]) * 100);
-                let icon = isMuted ? volumeMutedIcon : (pct === 0 ? volumeLevels[0] : (pct < 50 ? volumeLevels[1] : volumeLevels[2]));
-                volumeText.text = `${icon} ${pct}%`;
-            }
+    MouseArea {
+        anchors.fill: parent
+        cursorShape: Qt.PointingHandCursor
+        onClicked: {
+            Settings.audioPanelOpen = !Settings.audioPanelOpen;
+            Logger.i("Audio", `Panel ${Settings.audioPanelOpen ? "opened" : "closed"}`);
         }
-    }
-
-    Timer {
-        interval: 100
-        running: true
-        repeat: true
-        onTriggered: volumeProcess.running = true
     }
 }

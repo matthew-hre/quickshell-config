@@ -27,6 +27,8 @@ Singleton {
     property real bluetoothPanelHeight: 0
     property bool batteryPanelOpen: false
     property real batteryPanelHeight: 0
+    property bool audioPanelOpen: false
+    property real audioPanelHeight: 0
 
     function loadSettings() {
         const rawText = settingsFile.text();
