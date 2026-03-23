@@ -13,15 +13,13 @@ Item {
     property int pollIntervalMs: 200
     property int notifyTimeoutMs: 3000
     property string notifyAppName: "System"
-    property string brightnessIcon: "brightness-high-symbolic"
+    property string brightnessIcon: "brightness-symbolic";
     property var brightnessCommand: ["brightnessctl", "-m", "info"]
-
-    readonly property string brightnessIconPath: Quickshell.iconPath(brightnessIcon, true)
 
     function sendNotification(pct: int) {
         const summary = `Brightness ${pct}%`;
         let cmd = ["notify-send", "-a", root.notifyAppName, "-t", root.notifyTimeoutMs.toString(), "-p", "-e",
-                   "-h", `int:value:${pct}`, "-i", brightnessIconPath, summary];
+                   "-h", `int:value:${pct}`, "-i", brightnessIcon, summary];
         if (notifId >= 0)
             cmd.splice(7, 0, "-r", notifId.toString());
         notifProcess.command = cmd;
